@@ -36,12 +36,20 @@ def lognormpdf(x, mean, sd):
     num = -(float(x)-float(mean))**2/(2*var) 
     return (num + denom)
     
+#def logprior(theta):
+    #t_0_prior = 0
+    #s_0_prior = 0
+    #A_prior = 0 #flat prior: log(1) = 0
+    #V_0_prior = 0
+    #return(t_0_prior + s_0_prior + A_prior + V_0_prior)
+    
 def logprior(theta):
-    t_0_prior = 0
-    s_0_prior = 0
-    A_prior = 0 #flat prior: log(1) = 0
-    V_0_prior = 0
-    return(t_0_prior + s_0_prior + A_prior + V_0_prior)
+    t_0_prior = lognormpdf(theta[2], 1000, 1)
+    s_0_prior = lognormpdf(theta[3], 600, 1) 
+    V_0_prior = np.log(uniform.pdf(theta[0], loc=-200, scale=1000))
+    A_prior = np.log(uniform.pdf(theta[1], loc=-2000, scale=4000))
+    return(t_0_prior + s_0_prior + V_0_prior + A_prior)
+ 
     
 def logposterior(theta, t, mV):
     return logprior(theta) + loglikelihood(theta, t, mV)
@@ -71,7 +79,7 @@ def run_mcmc(ln_posterior, nsteps, ndim, theta0, stepsize, args=()):
     # Create the array of size nsteps to hold the log-likelihoods for each point
     # Initialize the first entry of this with the log likelihood at theta0
     log_likes = np.zeros(nsteps)
-    log_likes[0] = ln_posterior(chain[0], *args)
+    log_likes[0] = logposterior(chain[0], *args)
     # Loop for nsteps
     for i in tqdm.tqdm(range(1, nsteps)):
         # Randomly draw a new theta from the proposal distribution.
@@ -101,11 +109,12 @@ def run_mcmc(ln_posterior, nsteps, ndim, theta0, stepsize, args=()):
             
     return chain
 
-chain = run_mcmc(logposterior, 1000000, 4, [10, 10, 11, 10], 0.001, (t, mV)) 
-fig, ax = plt.subplots(3)
+chain = run_mcmc(logposterior, 100000, 4, [-1, 2, 10, 5], 1, (t, mV)) 
+fig, ax = plt.subplots(4)
 ax[0].plot(chain[:, 0])
 ax[1].plot(chain[:, 1])
 ax[2].plot(chain[:, 2]) 
+ax[3].plot(chain[:, 3])
 plt.show() 
 
 # Now that we've burned-in, let's get a fresh chain
@@ -132,6 +141,5 @@ plt.xlabel('Iteration')
 
 plt.figure()
 plt.title("Posterior samples")
-#_ = plt.hist(chain[100::100], bins=100)
-plt.hist(chain)
+_ = plt.hist(chain[1000::1000], bins=100)
 plt.show()
