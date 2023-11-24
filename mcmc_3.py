@@ -35,12 +35,12 @@ def calc_posterior(a, b, t, c):
     # Calculate joint posterior, given values for V_0, A, t, sigma_0
 
     # Priors on a,b
-    t_0_prior = dnorm(t, 1000, 1)
-    s_0_prior = dnorm(c, 600, 1) 
-    V_0_prior = np.log(uniform.pdf(a, loc=-200, scale=1000))
-    A_prior = np.log(uniform.pdf(b, loc=-2000, scale=4000))
-    logp = t_0_prior + s_0_prior + V_0_prior + A_prior
-    #logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 0, 10000) + dnorm(c, 0, 10000)
+    #t_0_prior = dnorm(t, 1000, 1)
+    #s_0_prior = dnorm(c, 600, 1) 
+    #V_0_prior = np.log(uniform.pdf(a, loc=-200, scale=1000))
+    #A_prior = np.log(uniform.pdf(b, loc=-2000, scale=4000))
+    #logp = t_0_prior + s_0_prior + V_0_prior + A_prior
+    logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 0, 10000) + dnorm(c, 0, 10000)
     # Calculate mu
     u = (x - t)/c
     mod = b * np.exp(-(u + np.exp(u))/2) + a
@@ -115,14 +115,13 @@ def metropolis(n_iterations, initial_values, prop_var=1):
 
 
 n_iter = 10000
-trace, acc = metropolis(n_iter, (1,0,1,1), 0.001)
+trace, acc = metropolis(n_iter, (21.94, 1581.98, 1834.32, 73.65), 0.01)
 for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
     fig, axes = plt.subplots(1, 2, figsize=(8, 2))
     axes[0].plot(samples)
     axes[0].set_ylabel(param)
     axes[1].hist(samples[int(n_iter/2):])
     plt.show()
-plt.hist(trace)
-plt.show()
+ 
 
  
