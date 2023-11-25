@@ -25,7 +25,7 @@ y = np.array(arr_2, dtype='float64')
  
 def model(a, b, t, c):
     u = (x - t)/c
-    mod = b * np.exp(-(u + np.exp(u))/2) + a
+    mod = b * np.exp(-(u + np.exp(-u))/2) + a
     return mod
  
 dgamma = gamma.logpdf
@@ -43,7 +43,7 @@ def calc_posterior(a, b, t, c):
     logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 0, 10000) + dnorm(c, 0, 10000)
     # Calculate mu
     u = (x - t)/c
-    mod = b * np.exp(-(u + np.exp(u))/2) + a
+    mod = b * np.exp(-(u + np.exp(-u))/2) + a
     # Data likelihood
     logp += sum(dnorm(y - mod, 0, 1)) 
     return logp
@@ -115,7 +115,7 @@ def metropolis(n_iterations, initial_values, prop_var=1):
 
 
 n_iter = 10000
-trace, acc = metropolis(n_iter, (21.94, 1581.98, 1834.32, 73.65), 0.01)
+trace, acc = metropolis(n_iter, (21.94, 1581.98, 1834.32, 73.65), 0.001)
 for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
     fig, axes = plt.subplots(1, 2, figsize=(8, 2))
     axes[0].plot(samples)
