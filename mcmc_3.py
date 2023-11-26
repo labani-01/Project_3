@@ -114,16 +114,4 @@ def metropolis(n_iterations, initial_values, prop_var=1):
     return trace, accepted
 
 
-n_iter = 10000
-trace, acc = metropolis(n_iter, (20.94, 1579.98, 1829.32, 72.65), 0.001)
-for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
-    fig, axes = plt.subplots(1, 2, figsize=(8, 2))
-    axes[0].plot(samples)
-    axes[0].set_ylabel(param)
-    axes[1].hist(samples[int(n_iter/2):])
-    plt.show()
  
- 
-plt.scatter(x, model(21.94, 1581.99, 1834.32, 73.65))
-plt.scatter(x, y)
-plt.show()

@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 from matplotlib.ticker import PercentFormatter
 import mplhep
-
 from MinuitFitting import Moyal, Moyal_Fit
+import mcmc_3
 
 #First need to read the file
 fullCSV = np.genfromtxt('SingleEventMoyal.csv', delimiter = ',', skip_header = 1)
@@ -33,3 +33,14 @@ fig.set_size_inches(10, 7)
 plt.show()
 
 #############################################################################
+n_iter = 10000
+trace, acc = mcmc_3.metropolis(n_iter, (20.94, 1579.98, 1829.32, 72.65), 0.001)
+for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
+    fig, axes = plt.subplots(1, 2, figsize=(8, 2))
+    axes[0].plot(samples)
+    axes[0].set_ylabel(param)
+    axes[1].hist(samples[int(n_iter/2):])
+    plt.show()
+ 
+ 
+ 
