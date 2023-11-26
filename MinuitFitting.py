@@ -49,7 +49,6 @@ def Moyal_Fit(x,y):
     m.limits["sigma"] = (10, 1000)
     m.migrad()
     m.hesse()
-    print(m)
     params = m.values
     
     return params
