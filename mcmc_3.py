@@ -40,7 +40,8 @@ def calc_posterior(a, b, t, c):
     #V_0_prior = np.log(uniform.pdf(a, loc=-200, scale=1000))
     #A_prior = np.log(uniform.pdf(b, loc=-2000, scale=4000))
     #logp = t_0_prior + s_0_prior + V_0_prior + A_prior
-    logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 1000, 10000) + dnorm(c, 0, 10000)
+    logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 0, 10000) + dnorm(c, 0, 10000)
+    #logp = dnorm(a, 21.94, 500) + dnorm(b, 1581.98, 500) + dnorm(t, 1834.32, 500) + dnorm(c, 73.65, 500)
     # Calculate mu
     u = (x - t)/c
     mod = b * np.exp(-(u + np.exp(-u))/2) + a
@@ -114,4 +115,21 @@ def metropolis(n_iterations, initial_values, prop_var=1):
     return trace, accepted
 
 
- 
+n_iter = 10000
+trace, acc = metropolis(n_iter, (20.94, 1581.50, 1829.32, 72.65), 0.001)
+for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
+    fig, axes = plt.subplots(1, 2, figsize=(8, 2))
+    axes[0].plot(samples)
+    axes[0].set_ylabel(param)
+    axes[1].hist(samples[int(n_iter/2):])
+    plt.show()
+    
+    
+posterior_samples = trace[n_iter // 2:]
+fig, ax = plt.subplots(3, 2)
+
+for i in range(3):
+    for j in range(2):
+        if i != j:
+            ax[i, j].scatter(posterior_samples[:, i], posterior_samples[:, j])
+plt.show()
