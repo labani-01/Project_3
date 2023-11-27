@@ -9,6 +9,8 @@ from matplotlib.ticker import PercentFormatter
 import mplhep
 from MinuitFitting import Moyal, Moyal_Fit
 import mcmc_3
+from mcmc_pymc3 import pymc3_Fit
+import pymc3 as pm
 
 #First need to read the file
 fullCSV = np.genfromtxt('SingleEventMoyal.csv', delimiter = ',', skip_header = 1)
@@ -43,4 +45,12 @@ for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_devia
     plt.show()
  
  
+#############################################################################
+#Now look at off the shelf method
+#############################################################################
  
+trace_pymc3 = pymc3_Fit(x, y, 1580, 1830, 21, 70)
+traceplot_pymc3 = pm.traceplot(trace_pymc3)
+fig.set_size_inches(10, 7)
+plt.show()
+
