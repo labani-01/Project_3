@@ -115,21 +115,6 @@ def metropolis(n_iterations, initial_values, prop_var=1):
     return trace, accepted
 
 
-n_iter = 10000
-trace, acc = metropolis(n_iter, (20.94, 1581.50, 1829.32, 72.65), 0.001)
-for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
-    fig, axes = plt.subplots(1, 2, figsize=(8, 2))
-    axes[0].plot(samples)
-    axes[0].set_ylabel(param)
-    axes[1].hist(samples[int(n_iter/2):])
-    plt.show()
+ 
     
-    
-posterior_samples = trace[n_iter // 2:]
-fig, ax = plt.subplots(3, 2)
-
-for i in range(3):
-    for j in range(2):
-        if i != j:
-            ax[i, j].scatter(posterior_samples[:, i], posterior_samples[:, j])
-plt.show()
+ 
