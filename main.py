@@ -48,9 +48,5 @@ for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_devia
 #############################################################################
 #Now look at off the shelf method
 #############################################################################
- 
-trace_pymc3 = pymc3_Fit(x, y, 1580, 1830, 21, 70)
-traceplot_pymc3 = pm.traceplot(trace_pymc3)
-fig.set_size_inches(10, 7)
-plt.show()
+
 
