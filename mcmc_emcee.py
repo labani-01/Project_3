@@ -1,6 +1,7 @@
 import numpy as np
 import emcee
 from MinuitFitting import Moyal
+import matplotlib.pyplot as plt
 
 def log_like(x, y, noise, params):
     
@@ -8,13 +9,15 @@ def log_like(x, y, noise, params):
     return -0.5*np.sum(((y-val)**2)/(noise**2))
 
 def prior(params):
-    prior_A = -0.5 * ((params[0]) / 1.0) ** 2
-    prior_xOff = -0.5 * ((params[1]) / 1.0) ** 2
-    prior_yOff = -0.5 * ((params[2]) / 1.0) ** 2
-    prior_sigma = -0.5 * ((params[3]) / 1.0) ** 2
+    A, xOff, yOff, sigma = params
+    prior_A = -0.5 * ((A)-1581 / 1) ** 2
+    prior_xOff = -0.5 * ((xOff)-1834 / 1.0) ** 2
+    prior_yOff = -0.5 * ((yOff)-22 / 1.0) ** 2
+    prior_sigma = -0.5 * ((sigma)-73 / 1.0) ** 2
+    return prior_A + prior_xOff + prior_yOff + prior_sigma
 
-def log_posterior(x, y, noise, params):
-    logPrior = prior(params, paramsGuess)
+def log_posterior(params, x, y, noise):
+    logPrior = prior(params)
     if not np.isfinite(logPrior):
         return -np.inf
     return logPrior + log_like(x, y, noise, params)
@@ -25,8 +28,13 @@ def mcmc(x, y, noise, nwalkers, paramsGuess):
     xOff_start = np.random.normal(loc = paramsGuess[1], scale = 10, size = nwalkers)
     yOff_start = np.random.normal(loc = paramsGuess[2], scale = 1, size = nwalkers)
     sigma_start = np.random.normal(loc = paramsGuess[3], scale = 2, size = nwalkers)
-
-    start = np.vstack((A_start, xOff_start, yOff_start, sigma_start))
+    
+    start = []
+    for i in range(nwalkers):
+        start.append([A_start[i], xOff_start[i], yOff_start[i], sigma_start[i]])
+    start = np.asarray(start)
+        
+    
 
     sampler = emcee.EnsembleSampler(nwalkers, 4, log_posterior, args=(x, y, noise))
     nsteps = 1000
@@ -43,5 +51,6 @@ y = fullCSV[:,4]
 samples = mcmc(x, y, 10, 10, [1580, 1834, 22, 74])
 
 plt.figure(figsize=(10, 6))
-plt.plot(samples[:, :, 0], color='k', alpha=0.3)
+plt.plot(samples[:, :, 3], color='k', alpha=0.3)
 plt.ylabel('a')
+plt.show()
