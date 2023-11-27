@@ -43,14 +43,3 @@ def mcmc(x, y, noise, nwalkers, paramsGuess):
 
     return samples
 
-fullCSV = np.genfromtxt('SingleEventMoyal.csv', delimiter = ',', skip_header = 1)
-
-x = fullCSV[:,3]
-y = fullCSV[:,4]
-
-samples = mcmc(x, y, 10, 10, [1580, 1834, 22, 74])
-
-plt.figure(figsize=(10, 6))
-plt.plot(samples[:, :, 3], color='k', alpha=0.3)
-plt.ylabel('a')
-plt.show()
