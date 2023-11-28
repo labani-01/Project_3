@@ -9,11 +9,12 @@ import tqdm
 from numpy import ndarray
 from scipy.stats import gamma, norm
  
+ 
 csv_file = 'SingleEventMoyal.csv'
 
 arr_1 = []
 arr_2 = []
-ev = []
+ 
  
 with open(csv_file, 'r') as f:
     reader = csv.DictReader(f)
@@ -23,10 +24,8 @@ with open(csv_file, 'r') as f:
 x = np.array(arr_1, dtype='float64')
 y = np.array(arr_2, dtype='float64') 
  
-def model(a, b, t, c):
-    u = (x - t)/c
-    mod = b * np.exp(-(u + np.exp(-u))/2) + a
-    return mod
+ 
+ 
  
 dgamma = gamma.logpdf
 dnorm = norm.logpdf
@@ -46,7 +45,7 @@ def calc_posterior(a, b, t, c):
     u = (x - t)/c
     mod = b * np.exp(-(u + np.exp(-u))/2) + a
     # Data likelihood
-    logp += sum(dnorm(y - mod, 0, 1)) 
+    logp += sum(dnorm(y - mod, 0, 10)) 
     return logp
     
     
@@ -59,7 +58,7 @@ def metropolis(n_iterations, initial_values, prop_var=1):
     n_params = len(initial_values)
             
     # Initial proposal standard deviations
-    prop_sd = [prop_var]*n_params
+    prop_sd = [prop_var]*n_params  #create a list of four elements, each of which is the integer 1
     
     # Initialize trace for parameters
     trace = np.empty((n_iterations+1, n_params))
@@ -116,5 +115,4 @@ def metropolis(n_iterations, initial_values, prop_var=1):
 
 
  
-    
  

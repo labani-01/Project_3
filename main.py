@@ -8,14 +8,20 @@ from matplotlib import colors
 from matplotlib.ticker import PercentFormatter
 import mplhep
 from MinuitFitting import Moyal, Moyal_Fit
-import mcmc_3
 from mcmc_emcee import log_like, prior, log_posterior, mcmc
+import mcmc_3
 
 #First need to read the file
 fullCSV = np.genfromtxt('SingleEventMoyal.csv', delimiter = ',', skip_header = 1)
 
 x = fullCSV[:,3]
 y = fullCSV[:,4]
+plt.figure(figsize=(10, 6))
+plt.plot(x, y)
+plt.xlabel('time(sec)')
+plt.ylabel('Voltage(mV)')
+plt.show()
+ 
 
 #############################################################################
 #First we can get expected fit parameters using Minuit's optimization method
@@ -30,18 +36,28 @@ mplhep.style.use("LHCb2")
 fig, axes = plt.subplots()
 axes.plot(x,y, color = 'red')
 axes.plot(x, y_opt, color = 'blue')
+plt.xlabel('time(sec)')
+plt.ylabel('Voltage(mV)')
 fig.set_size_inches(10, 7)
 plt.show()
 
+
+
 #############################################################################
+#Distribution of parameters from the handwritten mcmc
+#############################################################################
+ 
 n_iter = 10000
-trace, acc = mcmc_3.metropolis(n_iter, (20.94, 1579.98, 1829.32, 72.65), 0.001)
-for param, samples in zip(['intercept', 'normalization', 'mean', 'standard_deviation'], trace.T):
+trace, acc = mcmc_3.metropolis(n_iter, (20, 1580, 1830, 72.98), 0.01)
+for param, samples in zip(['offset voltage (V_0)', 'amplitude (A)', 'mean', 'width'], trace.T):
     fig, axes = plt.subplots(1, 2, figsize=(8, 2))
     axes[0].plot(samples)
+    axes[0].set_xlabel('iterations')
     axes[0].set_ylabel(param)
     axes[1].hist(samples[int(n_iter/2):])
     plt.show()
+ 
+ 
  
  
 #############################################################################
@@ -52,20 +68,24 @@ samples = mcmc(x,y,10,10, [1580, 1830, 22, 74])
 
 plt.figure(figsize=(10, 6))
 plt.plot(samples[:, :, 0], color='k', alpha=0.3)
+plt.xlabel('iterations')
 plt.ylabel('A')
 plt.show()
 
 plt.figure(figsize=(10, 6))
 plt.plot(samples[:, :, 1], color='k', alpha=0.3)
+plt.xlabel('iterations')
 plt.ylabel('xOff')
 plt.show()
 
 plt.figure(figsize=(10, 6))
 plt.plot(samples[:, :, 2], color='k', alpha=0.3)
+plt.xlabel('iterations')
 plt.ylabel('yOff')
 plt.show()
 
 plt.figure(figsize=(10, 6))
 plt.plot(samples[:, :, 3], color='k', alpha=0.3)
+plt.xlabel('iterations')
 plt.ylabel('width')
 plt.show()
