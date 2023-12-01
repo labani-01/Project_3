@@ -9,7 +9,7 @@ from matplotlib.ticker import PercentFormatter
 import mplhep
 from MinuitFitting import Moyal, Moyal_Fit
 from mcmc_emcee import log_like, prior, log_posterior, mcmc
-import mcmc_3
+import mcmc_handwritten
 import emcee
 import auto_corr
  
@@ -51,7 +51,7 @@ plt.show()
 #############################################################################
  
 n_iter = 10000
-trace, acc = mcmc_3.metropolis(n_iter, (20, 1580, 1830, 72.98), 0.01)
+trace, acc = mcmc_handwritten.metropolis(n_iter, (20, 1580, 1830, 72.98), 0.01)
 for param, samples in zip(['offset voltage (V_0)', 'amplitude (A)', 'mean', 'width'], trace.T):
     fig, axes = plt.subplots(1, 2, figsize=(8, 2))
     axes[0].plot(samples)
