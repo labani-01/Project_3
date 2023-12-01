@@ -9,33 +9,38 @@ from matplotlib.ticker import PercentFormatter
 import mplhep
 
 def Moyal(x, A, xOff, yOff, sigma):
+    """The Moyal Function
     
-    #The Moyal Function
-    
-    #Input:
-    #x: argument of moyal function
-    #A: Constant factor
-    #xOff: location of global maximum
-    #yOff: Constant y offset
-    #sigma: sigma of moyal function
+    Input:
+    x: argument of moyal function
+    A: Constant factor
+    xOff: location of global maximum
+    yOff: Constant y offset
+    sigma: sigma of moyal function
 
-    #Reuturns:
-    #y: value of the moyal function at x
+    Reuturns:
+    y: value of the moyal function at x 
+    
+    """
+    
     
     u = (x - xOff)/sigma
     y =  A*(np.exp(-(u+np.exp(-u))/2)) + yOff
     return y
 
 def Moyal_Fit(x,y):
+    """Fits data set to Moyal Function
+
+    Input:
+    x: x data
+    y: y data
+
+    Returns:
+    params: parameters of the Moyal function (A, xOff, yOff, sigma)
     
-    #Fits data set to Moyal Function
-
-    #Input:
-    #x: x data
-    #y: y data
-
-    #Returns:
-    #params: parameters of the Moyal function (A, xOff, yOff, sigma)
+    
+    """
+    
     
     maxADC = np.max(y)
     maxADC_loc = np.argmax(y)

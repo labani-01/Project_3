@@ -10,6 +10,8 @@ import mplhep
 from MinuitFitting import Moyal, Moyal_Fit
 from mcmc_emcee import log_like, prior, log_posterior, mcmc
 import mcmc_3
+import emcee
+ 
 
 #First need to read the file
 fullCSV = np.genfromtxt('SingleEventMoyal.csv', delimiter = ',', skip_header = 1)
@@ -59,7 +61,6 @@ for param, samples in zip(['offset voltage (V_0)', 'amplitude (A)', 'mean', 'wid
  
  
  
- 
 #############################################################################
 #Now look at off the shelf method
 #############################################################################
@@ -89,3 +90,5 @@ plt.plot(samples[:, :, 3], color='k', alpha=0.3)
 plt.xlabel('iterations')
 plt.ylabel('width')
 plt.show()
+
+ 

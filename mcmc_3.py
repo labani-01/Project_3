@@ -31,19 +31,24 @@ dgamma = gamma.logpdf
 dnorm = norm.logpdf
 
 def calc_posterior(a, b, t, c):
-    # Calculate joint posterior, given values for V_0, A, t, sigma_0
-
-    # Priors on a,b
-    #t_0_prior = dnorm(t, 1000, 1)
-    #s_0_prior = dnorm(c, 600, 1) 
-    #V_0_prior = np.log(uniform.pdf(a, loc=-200, scale=1000))
-    #A_prior = np.log(uniform.pdf(b, loc=-2000, scale=4000))
-    #logp = t_0_prior + s_0_prior + V_0_prior + A_prior
-    logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 0, 10000) + dnorm(c, 0, 10000)
-    #logp = dnorm(a, 21.94, 500) + dnorm(b, 1581.98, 500) + dnorm(t, 1834.32, 500) + dnorm(c, 73.65, 500)
-    # Calculate mu
+    """The calc_posterior Function
+    
+    Input:
+    a: constant y offset
+    b: Constant factor
+    t: location of global maximum
+    c: width of Moyal function
+     
+    Reuturns:
+    logp: calculating log of posterior distribution
+    
+    
+    """
+    
+    
+    logp = dnorm(a, 0, 10000) + dnorm(b, 0, 10000) + dnorm(t, 0, 10000) + dnorm(c, 0, 10000) #sum of log of priors 
     u = (x - t)/c
-    mod = b * np.exp(-(u + np.exp(-u))/2) + a
+    mod = b * np.exp(-(u + np.exp(-u))/2) + a #Moyal function
     # Data likelihood
     logp += sum(dnorm(y - mod, 0, 10)) 
     return logp
@@ -54,7 +59,19 @@ runif = np.random.rand
 np.random.seed(42)
 
 def metropolis(n_iterations, initial_values, prop_var=1):
-
+    """ The metropolis Function
+    
+    Input:
+    n_iterations: total number of iterations
+    initial_values: starting values of each parameters
+    
+    Reuturns:
+    trace: Chain of values for the parameters, row = n_iteraion, column = no. of parameters
+    accepted: Acceptance counts
+    
+    
+    """
+    
     n_params = len(initial_values)
             
     # Initial proposal standard deviations
@@ -72,10 +89,7 @@ def metropolis(n_iterations, initial_values, prop_var=1):
     # Initialize acceptance counts
     accepted = [0]*n_params
     
-    for i in range(n_iterations):
-    
-        if not i%1000: print('Iteration %i' % i)
-    
+    for i in tqdm.tqdm(range(n_iterations)):
         # Grab current parameter values
         current_params = trace[i]
     
@@ -114,5 +128,6 @@ def metropolis(n_iterations, initial_values, prop_var=1):
     return trace, accepted
 
 
+ 
  
  
