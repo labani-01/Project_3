@@ -13,8 +13,7 @@ def log_like(x, y, noise, params):
     params: parameters of the Moyal function (A, xOff, yOff, sigma)
      
     Reuturns:
-    log-likelihood: calculating log-likelihood, considering the fact that noise is gaussian with
-                    mean = 0 and standard deviation = 10
+    
     
     
     """
@@ -72,7 +71,7 @@ def mcmc(x, y, noise, nwalkers, paramsGuess):
      
     Reuturns:
     samples: chain of values for the parameters in the parameter space
-    
+    tau: autocorrelation-time
     
     """
     
