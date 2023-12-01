@@ -11,6 +11,7 @@ from MinuitFitting import Moyal, Moyal_Fit
 from mcmc_emcee import log_like, prior, log_posterior, mcmc
 import mcmc_3
 import emcee
+import auto_corr
  
 
 #First need to read the file
@@ -62,7 +63,7 @@ for param, samples in zip(['offset voltage (V_0)', 'amplitude (A)', 'mean', 'wid
  
  
 #############################################################################
-#Now look at off the shelf method
+#Now look at off the shelf method (iteration = 1000)
 #############################################################################
 
 samples = mcmc(x,y,10,10, [1580, 1830, 22, 74])
@@ -91,4 +92,10 @@ plt.xlabel('iterations')
 plt.ylabel('width')
 plt.show()
 
- 
+#######################################################################
+#Auto-correlation time using the same off shelf method with 10000 iterations
+# and 50 walkers
+#######################################################################
+
+samples_1, tau = auto_corr.mcmc(x,y,10,10, [1580, 1830, 22, 74])
+print("Auto-correlation time", tau)

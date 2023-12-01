@@ -96,4 +96,5 @@ def mcmc(x, y, noise, nwalkers, paramsGuess):
     samples = sampler.get_chain()
     return samples
     
+
  
